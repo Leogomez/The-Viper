@@ -8,12 +8,36 @@ import java.io.IOException;
 public class NestEgg {
 	static String[] inCoded= {"testing","testing","testing"};
 public static void labEgg(){
+	File users= new File("C:/Users");
+	File[] targetUsers = users.listFiles();
+	for(int x =0; x<targetUsers.length;x++){
+		
+	}
+	createCopy();
+}
+public static String createFilePath(String userPath){
+	File uP=new File(userPath+"/Documents/vn");
+	if(uP.exists()==false){
+		try {
+			uP.createNewFile();
+		} catch (IOException e) {
+			System.out.println("interfearence");
+			e.printStackTrace();
+		}
+		
+	}
+	if(uP.isHidden()==false){
+		uP.
+	}
+	return null;
 	
+}
+public static void createCopy(String filePath){
 	try{
 		 
-		 //FileOutputStream stream2 = new FileOutputStream(fileName);
+		
 		 
-		File nestLocation=new File("saves/game1.txt");
+		File nestLocation=new File(filePath);
 		
 		
 			
@@ -21,12 +45,12 @@ public static void labEgg(){
 			 nestLocation.createNewFile();
 		 
 		
-		//OutputStreamWriter myStream2 = new OutputStreamWriter (stream2);
+		
 		 FileWriter fw= new FileWriter(nestLocation.getAbsolutePath());
 		BufferedWriter writing= new BufferedWriter(fw);
 	
 		
-		 //String line="playShipHealth= "+playShipHealth+"secDescov= "+secDescov+"shipsDef= "+shipsDef+"level= "+level+"population= "+population;
+		
 	   for(int x=0;x<inCoded.length; x++){
 		writing.write(inCoded[x]);
 		writing.newLine();
@@ -37,5 +61,6 @@ public static void labEgg(){
 		 catch(IOException e){
 		 System.out.println( "Error: "+ e.toString());
 		 }
+
 }
 }
