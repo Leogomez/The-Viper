@@ -26,7 +26,9 @@ public void hatch(String mode){
 public void actionPerformed(ActionEvent arg0) {
 	File modeF= new File(vF.getAbsolutePath()+"/mode.txt");
 	if(modeF.exists()==true){
-		
+		hatch("Lab Rat");
+	}else{
+		hatch("Wild");
 	}
 	
 }
