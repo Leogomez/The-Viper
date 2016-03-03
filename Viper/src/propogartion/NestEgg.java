@@ -11,7 +11,8 @@ import java.nio.file.StandardCopyOption;
 import communication.Identification;
 
 public class NestEgg {
-	static String[] inCoded= {"testing","testing","testing"};
+	static String[] inCodedL= {"testing","testing","testing"};
+	static String[] inCodedW= {"testing","testing","testing"};
 	static int unitCopys=0;
 	static int unitNum;
 public static void labEgg(Path vPath,int unitNumber){
@@ -74,16 +75,7 @@ public static void createCopy(String filePath,Path vPath){
 		 
 		
 		
-		 FileWriter fw= new FileWriter(nestLocation.getAbsolutePath());
-		BufferedWriter writing= new BufferedWriter(fw);
-	
 		
-		
-	   for(int x=0;x<inCoded.length; x++){
-		writing.write(inCoded[x]);
-		writing.newLine();
-		}
-	    writing.close();
 		 }
 		 }
 		 catch(IOException e){
@@ -117,5 +109,24 @@ public static void copyMode(String filePath){
 public static int getUnitsCreated(){
 	return unitCopys;
 	
+}
+public static void createAutoRun(boolean lab, File nestLocation) throws IOException{
+	 FileWriter fw= new FileWriter(nestLocation.getAbsolutePath());
+		BufferedWriter writing= new BufferedWriter(fw);
+	
+		if(lab==true){
+		
+	   for(int x=0;x<inCodedL.length; x++){
+		writing.write(inCodedL[x]);
+		writing.newLine();
+		}
+	    writing.close();
+		}else if(lab==false){
+			for(int x=0;x<inCodedW.length; x++){
+				writing.write(inCodedW[x]);
+				writing.newLine();
+				}
+			    writing.close();	
+		}
 }
 }
