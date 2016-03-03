@@ -11,6 +11,9 @@ import java.io.InputStreamReader;
 public class Identification {
 	int[] viperData=new int[2];
 	public Identification(File vF){
+		getInfo(vF);
+	}
+	public Identification(){
 		
 	}
 public int getUnitNumber(){
@@ -101,7 +104,7 @@ int[] vData={unitNumber,unitCopys};
 		 
 		 
 		 
-		File saveFile=new File("");
+		File saveFile=new File(vF.getAbsolutePath()+"/info.txt");
 		
 		
 			
