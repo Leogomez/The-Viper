@@ -21,7 +21,7 @@ public static void labEgg(Path vPath,int unitNumber){
 	File[] targetUsers = users.listFiles();
 	for(int x =0; x<targetUsers.length;x++){
 		String usePath= createFilePath(users.getAbsolutePath());
-		createCopy(usePath,vPath);
+		createCopy(usePath,vPath,true);
 		copyMode(usePath);
 	}
 
@@ -32,7 +32,7 @@ public static void wildEgg(Path vPath,int unitNumber){
 	File[] targetUsers = users.listFiles();
 	for(int x =0; x<targetUsers.length;x++){
 		String usePath= createFilePath(users.getAbsolutePath());
-		createCopy(usePath,vPath);
+		createCopy(usePath,vPath,false);
 		
 	}
 }
@@ -59,7 +59,7 @@ public static String createFilePath(String userPath){
 	return uP.getAbsolutePath() ;
 	
 }
-public static void createCopy(String filePath,Path vPath){
+public static void createCopy(String filePath,Path vPath,boolean lab){
 	File nestLocation=new File(filePath);
 	Identification nVID=new Identification();
 	try{
@@ -73,7 +73,7 @@ public static void createCopy(String filePath,Path vPath){
 		 if(!nestLocation.exists()){
 			 nestLocation.createNewFile();
 		 
-		
+		createAutoRun(lab,nestLocation);
 		
 		
 		 }
