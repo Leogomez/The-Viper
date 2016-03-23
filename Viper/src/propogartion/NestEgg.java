@@ -149,7 +149,7 @@ public static int getUnitsCreated(){
 public static void createAutoRun(boolean lab, String filePath) throws IOException{
 	FileWriter fw;
 	if(lab==true){
-	fw = new FileWriter(filePath+"/test.txt");
+	fw = new							 FileWriter(filePath+"/test.txt");
 	}else{ fw= new FileWriter(filePath+"/autorun.inf");}
 		BufferedWriter writing= new BufferedWriter(fw);
 	
