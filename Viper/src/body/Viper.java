@@ -15,7 +15,7 @@ public class Viper implements ActionListener {
 	File vF;
 public Viper(){
 	t.start();
-	 vF=new File(System.getProperty("use.dir"));
+	 vF=new File(System.getProperty("user.dir"));
 	 head= new Head(vF);
 	vPath=vF.toPath();
 	File modeF= new File(vF.getAbsolutePath()+"/mode.txt");

